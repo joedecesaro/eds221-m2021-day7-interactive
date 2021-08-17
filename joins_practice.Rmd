@@ -1,0 +1,79 @@
+---
+title: "joins"
+author: "Joe DeCesaro"
+date: "8/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(palmerpenguins)
+library(lubridate)
+```
+## Warm-up
+```{r}
+warm_up_1 <- penguins %>% 
+  filter(island %in% c("Biscoe", "Dream")) %>% 
+  select(-sex,-year) %>% 
+  mutate(body_mass_kg = body_mass_g / 1000) %>% 
+  rename(location = island)
+
+warm_up_2 <- penguins %>% 
+  filter(species == "Adelie") %>% 
+  filter(!is.na(flipper_length_mm), 
+         !is.na(sex)) %>% 
+  group_by(sex) %>% 
+  summarize(mean = mean(flipper_length_mm),
+            sd = sd(flipper_length_mm),
+            n = n())
+```
+
+
+## Mutate Joins practice
+```{r}
+animals <- tibble::tribble(
+  ~location,   ~species,  ~maturity,
+   "lagoon",   "bobcat",    "adult",
+    "bluff",   "coyote", "juvenile",
+    "creek",      "fox",    "adult",
+     "oaks", "squirrel", "juvenile",
+    "bluff",   "bobcat",    "adult"
+  )
+
+sites <- tibble::tribble(
+           ~location,      ~full_site_name, ~jurisdiction,
+             "beach",       "Goleta Beach",     "SB City",
+            "lagoon",        "UCSB Lagoon",        "UCSB",
+             "bluff",       "Ellwood Mesa",     "SB City",
+              "oaks", "Fremont Campground",        "USFS",
+           )
+
+# A full_join example
+full_join_ex <- full_join(animals, sites)
+
+# A left_join example
+left_join_ex <- left_join(animals, sites, by = "location")
+
+# A right_join example
+right_join_ex <- right_join(animals, sites)
+
+# A inner_join example
+inner_join_ex <- inner_join(animals, sites)
+
+```
+
+## Filter Join practice
+```{r}
+semi_join_ex <- semi_join(animals, sites)
+
+anti_join_ex <- anti_join(animals, sites)
+```
+
+## Easier dates and times with {lubridate}
+```{r}
+
+```
+
+
+
